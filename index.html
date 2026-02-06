@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>艾维斯：双生幻影 | NIPCAT STUDIO</title>
+<!-- 新增：预加载首页大图，确保优先下载 -->
+    <link rel="preload" as="image" href="./1.jpeg" imagesrcset="./1-small.jpg 480w, ./1-medium.jpg 800w, ./1.jpg 1600w" imagesizes="100vw">
     <style>
         /* --- 0. 全局配置：黑曜石风格 --- */
         :root {
@@ -339,19 +341,19 @@
         <div class="section-header">/// VISUAL RECORDS</div>
         <div class="gallery-grid">
             <div class="g-item item-1 scroll-reveal">
-                <img src="./2.jpeg" alt="Key Art">
+                <img src="./2.jpeg" alt="Key Art" loading="lazy" decoding="async" width="800" height="560">
             </div>
             <div class="g-item item-2 scroll-reveal">
-                <img src="./3.jpeg" alt="Character">
+                <img src="./3.jpeg" alt="Character" loading="lazy" decoding="async" width="400" height="280">
             </div>
             <div class="g-item item-3 scroll-reveal">
-                <img src="./4.jpeg" alt="Environment">
+                <img src="./4.jpeg" alt="Environment" loading="lazy" decoding="async" width="400" height="280">
             </div>
             <div class="g-item item-4 scroll-reveal">
-                <img src="./5.jpeg" alt="Combat">
+                <img src="./5.jpeg" alt="Combat" loading="lazy" decoding="async" width="400" height="280">
             </div>
             <div class="g-item item-5 scroll-reveal">
-                <img src="./6.jpeg" alt="Concept">
+                <img src="./6.jpeg" alt="Concept" loading="lazy" decoding="async" width="800" height="280">
             </div>
         </div>
     </section>
