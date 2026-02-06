@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>艾维斯：双生幻影 | NIPCAT STUDIO</title>
+    <style>
+        /* --- 0. 全局配置：黑曜石风格 --- */
+        :root {
+            /* 纯净的深色系 */
+            --bg-void: #050505;       
+            --bg-card: rgba(20, 20, 20, 0.6);
+            
+            --text-main: #f2f2f2;     /* 亮白 */
+            --text-sub: #888888;      /* 中灰 */
+            --text-dark: #333333;     /* 深灰装饰 */
+            
+            /* 核心色：克莱因蓝 (高冷、极简) */
+            --accent: #2D5BFF;        
+            --accent-hover: #4e75ff;
+
+            /* 线条系统 */
+            --line-light: rgba(255, 255, 255, 0.08);
+            --line-strong: rgba(255, 255, 255, 0.2);
+
+            --font-main: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-mono: "Courier New", Courier, monospace; /* 装饰性数据字体 */
+            --font-serif: "Georgia", "Songti SC", serif;    /* 叙事字体 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased; /*字体抗锯齿*/
+        }
+
+        /* --- 1. 极简氛围层 --- */
+        /* 极淡的垂直网格线，增加秩序感 */
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20% 100%; /* 五列布局 */
+            pointer-events: none; z-index: 0;
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 30px 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference; /* 让导航栏在白图上反色 */
+        }
+        .logo {
+            font-weight: 800; letter-spacing: 1px; font-size: 14px;
+            text-transform: uppercase;
+        }
+        .nav-right span {
+            font-family: var(--font-mono); font-size: 11px; color: #aaa;
+            letter-spacing: 1px;
+        }
+
+        /* --- 2. 游戏主视觉 (Hero) --- */
+        .hero {
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 80px 60px 40px; 
+            position: relative; z-index: 1;
+        }
+        
+        .hero-frame {
+            width: 100%; height: 100%; max-width: 1600px;
+            position: relative; overflow: hidden;
+            background: #000;
+            /* 去掉了复杂的边角，改为极致的细线框 */
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .hero-bg {
+            position: absolute; inset: 0;
+            background-image: url('./1.jpg'); 
+            background-size: cover; background-position: center;
+            /* 降低对比度，增加一种“冷寂”的胶片感 */
+            filter: brightness(0.7) grayscale(20%) contrast(1.05); 
+            transform: scale(1.02);
+            transition: transform 10s ease;
+            z-index: 1;
+        }
+        /* 缓慢缩放动画 */
+        .hero-frame:hover .hero-bg { transform: scale(1.05); }
+
+        .hero-content {
+            position: absolute; bottom: 80px; left: 60px; z-index: 10;
+            text-align: left;
+        }
+        
+        .game-type {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px;
+            color: var(--accent); margin-bottom: 20px; display: block;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 5.5vw; font-weight: 700; letter-spacing: 0px;
+            margin-bottom: 10px; line-height: 1; color: #fff;
+            /* 极简的阴影，不再厚重 */
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .subtitle {
+            font-size: 14px; letter-spacing: 6px; color: rgba(255,255,255,0.7);
+            margin-top: 15px; font-family: var(--font-mono);
+            padding-left: 2px;
+        }
+
+        /* --- 3. 叙事 (Lore) --- */
+        .lore-section {
+            padding: 160px 20px;
+            background: var(--bg-void);
+            text-align: center;
+            position: relative;
+        }
+        
+        .divider {
+            width: 1px; height: 60px; background: var(--line-strong); margin: 0 auto 50px;
+        }
+
+        .lore-text {
+            max-width: 700px; margin: 0 auto;
+            font-family: var(--font-serif); font-size: 17px; color: #ccc; 
+            line-height: 2.4; letter-spacing: 0.5px;
+        }
+        .lore-text p { margin-bottom: 35px; opacity: 0; transform: translateY(20px); transition: 1s; }
+        /* 高亮改为简单的白色加粗，更干净 */
+        .lore-highlight { color: #fff; font-weight: bold; font-style: normal; }
+
+        /* --- 4. 制作进展 (Roadmap - 极简表格风) --- */
+        .roadmap-section {
+            padding: 100px 60px;
+            border-top: 1px solid var(--line-light);
+        }
+        .section-header {
+            font-family: var(--font-mono); font-size: 11px; color: var(--text-sub);
+            letter-spacing: 2px; margin-bottom: 60px;
+            text-transform: uppercase;
+        }
+        
+        .timeline {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--line-light);
+        }
+        
+        .t-node {
+            padding-top: 25px; border-top: 2px solid transparent; 
+            transition: 0.3s; position: relative;
+        }
+        /* 激活/Hover 状态：顶部线条变蓝 */
+        .t-node.active, .t-node:hover { border-top-color: var(--accent); }
+        
+        .t-year {
+            font-family: var(--font-mono); font-size: 32px; color: var(--text-dark);
+            display: block; margin-bottom: 5px; transition: 0.3s; line-height: 1;
+        }
+        .t-node.active .t-year, .t-node:hover .t-year { color: var(--text-main); }
+        
+        .t-info { 
+            font-size: 13px; color: var(--text-sub); display: block; 
+            margin-top: 10px; font-weight: 500;
+        }
+
+        /* --- 5. 视觉画廊 (Gallery - 紧凑网格) --- */
+        .gallery-section { padding: 0 60px 100px; }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 280px; gap: 10px; /* 间距调小，更精致 */
+        }
+        .g-item {
+            position: relative; overflow: hidden; background: #111;
+        }
+        .g-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s;
+            filter: grayscale(100%); opacity: 0.8;
+        }
+        .g-item:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.03); }
+
+        /* 布局类 */
+        .item-1 { grid-column: span 8; grid-row: span 2; } /* 左大图 */
+        .item-2 { grid-column: span 4; grid-row: span 1; } /* 右上 */
+        .item-3 { grid-column: span 4; grid-row: span 1; } /* 右下 */
+        .item-4 { grid-column: span 4; grid-row: span 1; } /* 下排 */
+        .item-5 { grid-column: span 8; grid-row: span 1; } /* 下排 */
+
+        /* --- 6. 工作室 (Studio - 融合式设计) --- */
+        .studio-section {
+            padding: 120px 20px;
+            background: linear-gradient(to bottom, var(--bg-void), #0a0a0c);
+            display: flex; justify-content: center;
+        }
+
+        .studio-card {
+            max-width: 800px; width: 100%;
+            /* 边框隐去，只留文字排版 */
+            text-align: center;
+        }
+
+        .studio-title {
+            font-size: 14px; letter-spacing: 4px; color: var(--text-sub);
+            margin-bottom: 40px; text-transform: uppercase;
+        }
+
+        .studio-desc {
+            font-size: 16px; color: var(--text-main); line-height: 2;
+            margin-bottom: 60px; font-weight: 300;
+        }
+        .studio-desc strong { color: #fff; font-weight: 600; }
+
+        /* 联系方式网格 */
+        .contact-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            border-top: 1px solid var(--line-light);
+            border-bottom: 1px solid var(--line-light);
+        }
+        .contact-item {
+            padding: 30px 10px;
+            border-right: 1px solid var(--line-light);
+            display: flex; flex-direction: column; gap: 10px;
+            transition: 0.3s;
+        }
+        .contact-item:last-child { border-right: none; }
+        .contact-item:hover { background: rgba(255,255,255,0.03); }
+
+        .c-label {
+            font-family: var(--font-mono); font-size: 10px; color: var(--accent);
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .c-value {
+            font-size: 13px; color: var(--text-main); text-decoration: none;
+            transition: color 0.2s;
+        }
+        a.c-value:hover { color: var(--accent); }
+
+        /* --- Footer --- */
+        footer {
+            padding: 40px 60px;
+            display: flex; justify-content: space-between;
+            font-family: var(--font-mono); font-size: 11px; color: #444;
+            border-top: 1px solid var(--line-light);
+        }
+        footer a { color: #666; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--text-main); }
+
+        /* --- 动画 --- */
+        @media (max-width: 768px) {
+            .hero { padding: 60px 20px 20px; }
+            h1 { font-size: 10vw; }
+            .timeline { grid-template-columns: 1fr; border-top: none; }
+            .t-node { border-top: none; border-left: 2px solid var(--line-light); padding: 0 0 30px 20px; }
+            .t-node.active { border-left-color: var(--accent); }
+            .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 240px; }
+            .item-1, .item-2, .item-3, .item-4, .item-5 { grid-column: span 1; grid-row: span 1; }
+            .contact-grid { grid-template-columns: 1fr; border: none; }
+            .contact-item { border-right: none; border-bottom: 1px solid var(--line-light); padding: 20px 0; }
+            nav { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 0. 极简网格背景 -->
+    <div class="grid-bg"></div>
+
+    <nav>
+        <div class="logo">NIPCAT STUDIO</div>
+        <div class="nav-right">
+            <span>PROJECT: AVIS</span>
+        </div>
+    </nav>
+
+    <!-- 1. Hero: 黑曜石相框 -->
+    <header class="hero">
+        <div class="hero-frame">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <!-- 简单的解码动效 -->
+                <span class="game-type scramble-text" data-value="POST-APOCALYPTIC FANTASY ARPG">
+                    POST-APOCALYPTIC FANTASY ARPG
+                </span>
+                <h1>艾维斯：双生幻影</h1>
+                <div class="subtitle">AVIS: PHANTOM OF DUALITY</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Lore: 纯文字叙事 -->
+    <section class="lore-section">
+        <div class="divider"></div>
+        <div class="lore-text">
+            <p>当改写法则的「幻尘」降临，希望与灾厄的战争已悄然开启。</p>
+            <p>它的降临，既是赠礼，也是诅咒。<br>在人类无休止的滥用下，灾厄的阴影悄然笼罩世界，撕裂了世界之间的帷幕。</p>
+            <p>为了寻回迷失在异界，能够解决危机的关键人物，<br>你——<span class="lore-highlight">艾维斯</span>，作为组织的利刃，被派往那遥远彼端的破碎大陆「Oneiria」。</p>
+            <p>昔日繁华化作断壁残垣，诡异的法则支配着这片失落之地。<br>你将在未知的旅途中，见证一个国度的陨落。</p>
+            <p style="margin-top: 50px; color: var(--text-main); font-weight: 500;">
+                挥舞利刃，斩开迷雾。<br>
+                在压抑的绝境里，成为点燃他人希望的烛光。
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. Roadmap: 极简表格 -->
+    <section class="roadmap-section">
+        <div class="section-header">/// DEVELOPMENT ROADMAP</div>
+        <div class="timeline">
+            <div class="t-node active">
+                <span class="t-year">2026</span>
+                <span class="t-info">ChinaJoy 线下参展</span>
+            </div>
+            <div class="t-node">
+                <span class="t-year">2027</span>
+                <span class="t-info">发布首个实机 DEMO</span>
+            </div>
+            <div class="t-node">
+                <span class="t-year">2028</span>
+                <span class="t-info">限量封闭试玩 (CBT)</span>
+            </div>
+            <div class="t-node">
+                <span class="t-year">2029</span>
+                <span class="t-info">全平台正式发售</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Visuals: 紧凑拼图 -->
+    <section class="gallery-section">
+        <div class="section-header">/// VISUAL RECORDS</div>
+        <div class="gallery-grid">
+            <div class="g-item item-1 scroll-reveal">
+                <img src="./2.jpg" alt="Key Art">
+            </div>
+            <div class="g-item item-2 scroll-reveal">
+                <img src="./3.jpg" alt="Character">
+            </div>
+            <div class="g-item item-3 scroll-reveal">
+                <img src="./4.jpg" alt="Environment">
+            </div>
+            <div class="g-item item-4 scroll-reveal">
+                <img src="./5.jpg" alt="Combat">
+            </div>
+            <div class="g-item item-5 scroll-reveal">
+                <img src="./6.jpg" alt="Concept">
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Studio: 融合卡片 -->
+    <section class="studio-section">
+        <div class="studio-card">
+            <div class="studio-title">NIPCAT STUDIO</div>
+            <div class="studio-desc">
+                薄荷猫工作室（Nipcat Studio）是一个年轻的非全职游戏开发工作室，成立于2020年。<br>
+                核心成员来自 <strong>影之刃零、米哈游、腾讯、网易</strong> 等知名项目与公司。<br>
+                <br>
+                2023年发布《Oneiria》Demo并受到关注，2025年正式更名为《艾维斯：双生幻影》。<br>
+                我们致力于在压抑的绝境里，创造点燃希望的烛光。
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span class="c-label">Investment</span>
+                    <span class="c-value">寻求投资与合作</span>
+                </div>
+                <div class="contact-item">
+                    <span class="c-label">Contact</span>
+                    <a href="mailto:2868677642@qq.com" class="c-value">2868677642@qq.com</a>
+                </div>
+                <div class="contact-item">
+                    <span class="c-label">Social</span>
+                    <a href="#" class="c-value">@薄荷猫工作室NipcatStdio</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>&copy; 2026 NIPCAT STUDIO</div>
+        <div>
+            <a href="https://github.com/WMcynin/NipcatStdio">GITHUB REPOSITORY</a>
+        </div>
+    </footer>
+
+    <script>
+        // --- 文字解码特效 (Scramble) ---
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const scrambleElement = document.querySelector('.scramble-text');
+
+        if (scrambleElement) {
+            const originalText = scrambleElement.dataset.value;
+            
+            const runScramble = () => {
+                let iterations = 0;
+                const interval = setInterval(() => {
+                    scrambleElement.innerText = originalText
+                        .split("")
+                        .map((letter, index) => {
+                            if(index < iterations) {
+                                return originalText[index];
+                            }
+                            return letters[Math.floor(Math.random() * 36)];
+                        })
+                        .join("");
+                    
+                    if(iterations >= originalText.length){ 
+                        clearInterval(interval);
+                    }
+                    
+                    iterations += 1 / 2;
+                }, 30);
+            };
+
+            // 初始运行
+            setTimeout(runScramble, 500);
+            // 鼠标悬停运行
+            scrambleElement.addEventListener('mouseenter', runScramble);
+        }
+
+        // --- 滚动显现 ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.lore-text p, .scroll-reveal').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
