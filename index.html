@@ -140,40 +140,6 @@
         /* 高亮改为简单的白色加粗，更干净 */
         .lore-highlight { color: #fff; font-weight: bold; font-style: normal; }
 
-        /* --- 4. 制作进展 (Roadmap - 极简表格风) --- */
-        .roadmap-section {
-            padding: 100px 60px;
-            border-top: 1px solid var(--line-light);
-        }
-        .section-header {
-            font-family: var(--font-mono); font-size: 11px; color: var(--text-sub);
-            letter-spacing: 2px; margin-bottom: 60px;
-            text-transform: uppercase;
-        }
-        
-        .timeline {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            border-top: 1px solid var(--line-light);
-        }
-        
-        .t-node {
-            padding-top: 25px; border-top: 2px solid transparent; 
-            transition: 0.3s; position: relative;
-        }
-        /* 激活/Hover 状态：顶部线条变蓝 */
-        .t-node.active, .t-node:hover { border-top-color: var(--accent); }
-        
-        .t-year {
-            font-family: var(--font-mono); font-size: 32px; color: var(--text-dark);
-            display: block; margin-bottom: 5px; transition: 0.3s; line-height: 1;
-        }
-        .t-node.active .t-year, .t-node:hover .t-year { color: var(--text-main); }
-        
-        .t-info { 
-            font-size: 13px; color: var(--text-sub); display: block; 
-            margin-top: 10px; font-weight: 500;
-        }
-
         /* --- 5. 视觉画廊 (Gallery - 紧凑网格) --- */
         .gallery-section { padding: 0 60px 100px; }
         .gallery-grid {
